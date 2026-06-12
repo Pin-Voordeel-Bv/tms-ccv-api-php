@@ -10,7 +10,7 @@ A PHP Wrapper for the <a href="https://tms-demo.ccvdev.eu/api/external/index.htm
 <?php
 
 use Dotenv\Dotenv;
-use PinVandaag\BuckarooAPI\BuckarooAPIClient;
+use PinVandaag\BuckarooAPI\TmsCcvAPIClient;
 
 final class BuckarooController
 {
@@ -22,7 +22,7 @@ final class BuckarooController
         $dotenv->safeLoad();
         $dotenv->required(['TMS_CCV_API_KEY'])->notEmpty();
 
-        $this->apiClient = (new BuckarooAPIClient())
+        $this->apiClient = (new TmsCcvAPIClient())
             ->configure(
                 apiKey: $_ENV['TMS_CCV_API_KEY'],
                 baseUri: 'https://tms-demo-ccvdev.eu/api'
