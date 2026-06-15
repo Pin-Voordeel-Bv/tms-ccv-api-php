@@ -80,7 +80,7 @@ final class BuckarooController
     // http://example.com/ccv/terminals/configuration/update?tmsGateway=GrundmasterNL&terminalId=123456789&configurationName=SOFTPOS-MYPP&configurationVersion=1.0.1
     // http://example.com/ccv/terminals/configuration/update/cancel?tmsGateway=GrundmasterNL&terminalId=123456789
     // http://example.com/ccv/get_version
-    ```
+```
 
 ## Example routes
 
