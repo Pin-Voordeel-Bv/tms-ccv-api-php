@@ -166,23 +166,7 @@ final class APIClient
         $tmsGateway = $this->assertStringField($tmsGateway, 'tmsGateway', required: true, maxLength: 50);
         $terminalId = $this->assertStringField($terminalId, 'terminalId', required: true, maxLength: 50);
 
-        if ($parameters === []) {
-            throw new TmsCcvAPIException('parameters is required and must contain at least one parameter.');
-        }
-
-        foreach ($parameters as $index => $parameter) {
-            if (!is_array($parameter)) {
-                throw new TmsCcvAPIException(sprintf('parameters[%d] must be an array.', $index));
-            }
-
-            $parameters[$index]['id'] = $this->assertStringField(
-                $parameter['id'] ?? null,
-                sprintf('parameters[%d].id', $index),
-                required: true
-            );
-
-            $parameters[$index]['value'] = $parameter['value'] ?? null;
-        }
+        $parameters = $this->assertTerminalParameterUpdates($parameters);
 
         $notes = $this->assertStringField($notes, 'notes', required: false);
         $this->assertOnBehalfOf($onBehalfOf);
@@ -197,7 +181,7 @@ final class APIClient
             options: [
                 'headers' => $this->defaultHeaders() + ['Content-Type' => 'application/json'] + $this->optionalOnBehalfOfHeader($onBehalfOf),
                 'json' => $this->filterPayload([
-                    'parameters' => array_values($parameters),
+                    'parameters' => $parameters,
                     'notes' => $notes,
                 ]),
             ],
@@ -241,23 +225,7 @@ final class APIClient
         $tmsGateway = $this->assertStringField($tmsGateway, 'tmsGateway', required: true, maxLength: 50);
         $terminalId = $this->assertStringField($terminalId, 'terminalId', required: true, maxLength: 50);
 
-        if ($parameters === []) {
-            throw new TmsCcvAPIException('parameters is required and must contain at least one parameter.');
-        }
-
-        foreach ($parameters as $index => $parameter) {
-            if (!is_array($parameter)) {
-                throw new TmsCcvAPIException(sprintf('parameters[%d] must be an array.', $index));
-            }
-
-            $parameters[$index]['id'] = $this->assertStringField(
-                $parameter['id'] ?? null,
-                sprintf('parameters[%d].id', $index),
-                required: true
-            );
-
-            $parameters[$index]['value'] = $parameter['value'] ?? null;
-        }
+        $parameters = $this->assertTerminalParameterUpdates($parameters);
 
         $notes = $this->assertStringField($notes, 'notes', required: false);
         $this->assertOnBehalfOf($onBehalfOf);
@@ -270,7 +238,7 @@ final class APIClient
                 rawurlencode($terminalId)
             ),
             payload: [
-                'parameters' => array_values($parameters),
+                'parameters' => $parameters,
                 'notes' => $notes,
             ],
             responseClass: UpdatedTerminalParameters::class,
@@ -506,7 +474,7 @@ final class APIClient
     /**
      * Set the activation status of a terminal.
      *
-     * Only "Activated" and "Deactivated" are accepted for setting.
+     * Only "Unknown", "Activated" and "Deactivated" are accepted for setting.
      *
      * @throws TmsCcvAPIException
      */
@@ -1135,6 +1103,34 @@ final class APIClient
                 maxLength: 64,
             );
         }
+    }
+
+    /**
+     * @param list<array{id:string,value:mixed}> $parameters
+     *
+     * @return list<array{id:string,value:mixed}>
+     */
+    private function assertTerminalParameterUpdates(array $parameters): array
+    {
+        if ($parameters === []) {
+            throw new TmsCcvAPIException('parameters is required and must contain at least one parameter.');
+        }
+
+        foreach ($parameters as $index => $parameter) {
+            if (!is_array($parameter)) {
+                throw new TmsCcvAPIException(sprintf('parameters[%d] must be an array.', $index));
+            }
+
+            $parameters[$index]['id'] = $this->assertStringField(
+                $parameter['id'] ?? null,
+                sprintf('parameters[%d].id', $index),
+                required: true
+            );
+
+            $parameters[$index]['value'] = $parameter['value'] ?? null;
+        }
+
+        return array_values($parameters);
     }
 
     /** @param array<string, mixed> $payload */

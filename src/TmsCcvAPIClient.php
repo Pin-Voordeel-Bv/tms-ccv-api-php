@@ -165,7 +165,7 @@ final class TmsCcvAPIClient
         string $tmsGateway,
         string $terminalId,
         ?string $onBehalfOf = null,
-    ): Terminal  {
+    ): Terminal {
         return $this->apiClient->getTerminal($tmsGateway, $terminalId, $onBehalfOf);
     }
 
