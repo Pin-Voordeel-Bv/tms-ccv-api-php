@@ -84,7 +84,7 @@ final class BuckarooController
 
 ## Example routes
 
-```
+```php
     $router->mount("/ccv", function () use ($router) {
         $router->get('/hardware', 'TmsCcvController@getHardwareBySerialNumber');
         $router->get('/terminals/parameters', 'TmsCcvController@getTerminalParameters');
@@ -106,7 +106,7 @@ final class BuckarooController
 
 ## Example code
 
-```
+```php
 <?php
 
 use Dotenv\Dotenv;
